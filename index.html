@@ -4,10 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phillip's Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-button:hover {
+            background-color: #e0e0e0;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            border-bottom-color: #007bff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Welcome to Phillip's website.</h1>
     </header>
+    
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab(event, 'tab1')">Home</button>
+        <button class="tab-button" onclick="showTab(event, 'tab2')">About</button>
+        <button class="tab-button" onclick="showTab(event, 'tab3')">Contact</button>
+    </div>
+
+    <div id="tab1" class="tab-content active">
+        <h2>Home</h2>
+        <p>Welcome to the home page!</p>
+    </div>
+
+    <div id="tab2" class="tab-content">
+        <h2>About</h2>
+        <p>Learn more about me here.</p>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <h2>Contact</h2>
+        <p>Get in touch with me.</p>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 </body>
 </html>
