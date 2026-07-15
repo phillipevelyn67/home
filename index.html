@@ -12,6 +12,38 @@
             background-color: lightblue;
             padding: 20px;
             border-radius: 5px;
+            position: relative; /* allow absolute positioning inside header */
+        }
+        .header-actions {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header-tab {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .header-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 180px;
+            z-index: 10;
         }
         .tabs {
             display: flex;
@@ -49,6 +81,15 @@
 <body>
     <header>
         <h1>Welcome to Phillip's website.</h1>
+        <div class="header-actions">
+            <button id="headerTab" class="header-tab" onclick="toggleHeaderTab()">Contact</button>
+            <div id="headerDropdown" class="header-dropdown" aria-hidden="true">
+                <strong>Contact Phillip</strong>
+                <div style="margin-top:6px;font-size:14px;">Email: <a href="mailto:hello@example.com">hello@example.com</a></div>
+                <div style="margin-top:6px;font-size:13px;color:#666;">Or click below to open the About tab.</div>
+                <button style="margin-top:8px;padding:6px 8px;font-size:13px;" onclick="showTabFromHeader(event)">Open About</button>
+            </div>
+        </div>
     </header>
     
     <div class="tabs">
@@ -97,7 +138,50 @@
             }
             
             document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+            if (evt && evt.currentTarget) evt.currentTarget.classList.add("active");
+        }
+
+        function toggleHeaderTab() {
+            var dd = document.getElementById('headerDropdown');
+            var isHidden = dd.style.display === 'none' || dd.getAttribute('aria-hidden') === 'true';
+            dd.style.display = isHidden ? 'block' : 'none';
+            dd.setAttribute('aria-hidden', isHidden ? 'false' : 'true');
+        }
+
+        // Open the About content by creating it if missing, then showing it
+        function showTabFromHeader(evt) {
+            // If About tab doesn't exist in main tabs, create it
+            if (!document.getElementById('tab4')) {
+                // create About tab content and tab button at the end of tabs
+                var tabsDiv = document.getElementsByClassName('tabs')[0];
+                var aboutButton = document.createElement('button');
+                aboutButton.className = 'tab-button';
+                aboutButton.onclick = function(e){ showTab(e, 'tab4'); };
+                aboutButton.textContent = 'About';
+                tabsDiv.insertBefore(aboutButton, tabsDiv.children[2] || null);
+
+                var aboutDiv = document.createElement('div');
+                aboutDiv.id = 'tab4';
+                aboutDiv.className = 'tab-content';
+                aboutDiv.innerHTML = '<h2>About</h2><p>Hi — I\'m Phillip. This is a simple site showcasing facts about bees and birds. Thanks for visiting!</p>';
+                // insert About content after Home
+                var homeDiv = document.getElementById('tab1');
+                homeDiv.parentNode.insertBefore(aboutDiv, homeDiv.nextSibling);
+            }
+
+            // Close dropdown and trigger the About tab
+            var dd = document.getElementById('headerDropdown');
+            dd.style.display = 'none';
+            dd.setAttribute('aria-hidden', 'true');
+
+            // Find the About button we created (or existing one in tabs) and simulate click
+            var tabbuttons = document.getElementsByClassName('tab-button');
+            for (var i = 0; i < tabbuttons.length; i++) {
+                if (tabbuttons[i].textContent.trim() === 'About') {
+                    tabbuttons[i].click();
+                    break;
+                }
+            }
         }
     </script>
 </body>
